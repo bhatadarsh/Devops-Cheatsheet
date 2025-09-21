@@ -1,0 +1,142 @@
+Docker Command Syntax
+The general syntax for a Docker command is:
+
+docker [OPTIONS] COMMAND
+
+docker: The main command-line interface (CLI) tool.
+
+[OPTIONS]: Flags that modify the command's behavior (e.g., -d for detached mode, -p for port mapping).
+
+COMMAND: The specific action you want to perform (e.g., run, build, pull, ps).
+
+Here are some of the most common commands and their syntax:
+
+docker run - Creates and starts a new container from an image.
+
+Syntax: docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
+
+Example: docker run -d -p 8080:80 --name my-nginx nginx:latest
+
+-d: Runs the container in detached mode (in the background).
+
+-p 8080:80: Publishes container port 80 to host port 8080.
+
+--name my-nginx: Assigns a name to the container.
+
+nginx:latest: The image to use.
+
+docker build - Builds a new image from a Dockerfile.
+
+Syntax: docker build [OPTIONS] PATH | URL | -
+
+Example: docker build -t my-app:1.0 .
+
+-t my-app:1.0: Tags the image with a name and version.
+
+.: The build context, which is the current directory.
+
+docker ps - Lists containers.
+
+Syntax: docker ps [OPTIONS]
+
+Example: docker ps -a
+
+-a: Shows all containers, including stopped ones.
+
+Docker Compose Syntax
+Docker Compose uses a YAML file (typically docker-compose.yml) to define and configure a multi-container application. The syntax is structured and relies on indentation to represent the hierarchy.
+
+A standard docker-compose.yml file is composed of a few top-level keys: version, services, networks, and volumes.
+
+Basic Structure
+YAML
+
+version: '3.8' # Specifies the Compose file format version
+
+services:
+  <service_name>: # The name of your first container/service
+    image: <image_name> # The Docker image to use
+    ports:
+      - "<host_port>:<container_port>"
+    volumes:
+      - "<host_path>:<container_path>"
+    networks:
+      - <network_name>
+    # Other options like build, environment, etc.
+  
+  <another_service_name>: # Your second container/service
+    image: <another_image>
+    depends_on:
+      - <service_name> # Ensures this service starts after the other
+
+networks:
+  <network_name>:
+    # Network configuration if needed
+
+volumes:
+  <volume_name>:
+    # Volume configuration for persistent data
+Common Service Options
+build: Instructs Compose to build an image from a Dockerfile.
+
+YAML
+
+services:
+  web:
+    build: . # Path to the directory containing the Dockerfile
+    ports:
+      - "8000:80"
+image: Pulls an existing image from a registry like Docker Hub.
+
+YAML
+
+services:
+  db:
+    image: "postgres:13-alpine"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+ports: Maps ports from the host to the container.
+
+YAML
+
+ports:
+  - "8080:80" # Maps host_port:container_port
+  - "8081:8081/udp"
+volumes: Mounts host files or directories into the container for data persistence.
+
+YAML
+
+volumes:
+  - "./app:/usr/src/app" # Mounts a local directory
+  - "data-volume:/var/lib/data" # Uses a named volume
+networks: Connects a service to a specific network.
+
+YAML
+
+networks:
+  - my-app-net
+depends_on: Specifies that a service depends on another and should be started in a specific order.
+
+YAML
+
+web:
+  depends_on:
+    - db
+Docker Compose CLI Commands
+Once you have your docker-compose.yml file, you can manage the application with a single command.
+
+docker compose up: Builds, creates, and starts all services defined in the file. Use -d for detached mode.
+
+docker compose down: Stops and removes all containers, networks, and volumes created by up.
+
+docker compose ps: Lists the running services.
+
+docker compose logs: Displays the logs from all services.
+
+
+
+
+
+
+
